@@ -1,0 +1,89 @@
+generated: '2026-08-26'
+method: probed
+source: >-
+  https://prod-nexttrucking.us.auth0.com/.well-known/openid-configuration (HTTP 200);
+  https://nexttrucking.com/our-technology/ (HTTP 200); live probes of
+  https://svcs.us-west-2.prod.aws.nexttrucking.com and every /.well-known/ path recorded in
+  well-known/next-trucking-well-known.yml.
+summary: >-
+  The only standards NEXT Trucking demonstrably implements are identity standards, and they are
+  implemented by its Auth0 tenant rather than by anything NEXT publishes. There is no machine-readable
+  API contract of any kind, so no contract-level conformance — including the freight sector's own
+  interoperability standards — can be asserted. Absence here is a measurement, not a penalty.
+standards:
+  - id: oauth2
+    name: OAuth 2.0 (RFC 6749)
+    conforms: true
+    evidence: >-
+      Token, authorization, revocation and device-code endpoints advertised in the tenant's discovery
+      document; grant_types_supported includes authorization_code, client_credentials and
+      refresh_token. Saved verbatim at well-known/next-trucking-openid-configuration.json.
+    scope: identity layer only — not a documented developer API auth model
+  - id: oidc
+    name: OpenID Connect Core / Discovery 1.0
+    conforms: true
+    evidence: >-
+      https://prod-nexttrucking.us.auth0.com/.well-known/openid-configuration returns HTTP 200 with
+      issuer, jwks_uri, userinfo_endpoint and the standard scope and claim sets.
+  - id: rfc8414
+    name: OAuth 2.0 Authorization Server Metadata (RFC 8414)
+    conforms: true
+    evidence: >-
+      /.well-known/oauth-authorization-server returns HTTP 200 on the same tenant (Auth0 serves the
+      identical metadata body at both discovery paths).
+  - id: rfc7636
+    name: PKCE (RFC 7636)
+    conforms: true
+    evidence: code_challenge_methods_supported = [S256, plain] in the discovery document.
+  - id: rfc9116
+    name: security.txt (RFC 9116)
+    conforms: false
+    evidence: >-
+      /.well-known/security.txt returns HTTP 404 on nexttrucking.com and HTTP 403 (S3 AccessDenied)
+      on app. and atlas.nexttrucking.com. No security contact is published anywhere.
+  - id: openapi
+    name: OpenAPI
+    conforms: false
+    evidence: >-
+      No OpenAPI document is retrievable. The ATLAS gateway serves the springdoc Swagger UI asset
+      bundle at /<service>/swagger-ui/index.html (HTTP 200) for 22 services, but the documents that UI
+      is configured to load — /<service>/v3/api-docs and /<service>/v3/api-docs/swagger-config — are
+      unrouted at the gateway and return HTTP 404 for every service. The generator exists behind the
+      wall; the output is not exposed. Probed 2026-08-26.
+  - id: rfc9457
+    name: Problem Details for HTTP APIs (RFC 9457)
+    conforms: unknown
+    evidence: >-
+      Cannot be determined. Anonymous gateway errors are nginx HTML ("401 Authorization Required"),
+      not application error bodies; one service (location) returned a Spring-style JSON error
+      {"timestamp","status","error","path"}, which is NOT problem+json, but that is a single
+      observation from an unauthenticated 403 rather than a documented error contract.
+  - id: x12-edi
+    name: ASC X12 EDI (freight transaction sets — 204/210/214/990/997)
+    conforms: false
+    evidence: >-
+      PROSE CLAIM ONLY, and recorded as a non-conformance for that reason. https://nexttrucking.com/our-technology/
+      states the platform connects "demand to supply with easy-to-use tools such as EDI, API, portals,
+      and mobile apps", and NEXT's 2021 Bristlecone "Instegration" partnership is an EDI integration
+      offering — but no transaction-set list, implementation guide, partner-onboarding document or
+      machine-readable contract naming an X12 set is published. Per the domain_standard_conformance
+      rule this is evidence-not-claim territory: naming EDI in marketing copy earns nothing.
+    remedy: >-
+      Publish the supported X12 transaction sets and an implementation guide at a public URL. Drayage
+      shippers already speaking 204/214 could then integrate without a bilateral mapping conversation.
+  - id: domain_standard
+    name: Domain-standard signature in the contract
+    conforms: false
+    evidence: >-
+      Not assessable — there is no contract to carry a signature. No SCIM URN, OData $metadata,
+      OpenRTB endpoint, Sparkplug namespace, ActivityPub actor or X12/EDIFACT message type could be
+      looked for, because no OpenAPI, AsyncAPI, GraphQL SDL, WSDL or .proto is published on any host.
+compliance:
+  certifications_published: false
+  evidence: >-
+    No trust center, no SOC 2 / ISO 27001 / PCI / HIPAA / FedRAMP claim, and no security page. Checked
+    https://nexttrucking.com/data-privacy/ (HTTP 200), https://nexttrucking.com/privacy-policy/ (HTTP
+    200) and probed trust.nexttrucking.com / security.nexttrucking.com — neither resolves.
+  note: >-
+    No Compliance pointer is emitted, because nothing compliance-bearing is published. This is an
+    honest absence, not a gap in the probe.

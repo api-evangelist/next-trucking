@@ -1,18 +1,67 @@
 aid: next-trucking
 name: NEXT Trucking
-description: 'NEXT Trucking is a company surfaced via the API Evangelist harvest backlog (source: secondary-market)
-  and added to the network as a stub for full-pipeline profiling.'
+description: >-
+  NEXT Trucking (branded "NEXT") is a FreightTech company founded in 2015 and headquartered in the
+  Los Angeles area, operating a digital freight marketplace focused on drayage at the Ports of Los
+  Angeles and Long Beach, plus transloading, full-truckload over-the-road and expedited (NEXTpedited)
+  service. Its technology core is ATLAS, a proprietary transportation management system that carries
+  a container from delivery-order ingestion through job creation, dispatch, billing and payout, and
+  that connects shippers, carriers, terminals, yards and chassis providers. The company markets EDI
+  and API connectivity alongside its shipper/carrier portals and driver mobile apps, but publishes no
+  developer portal, no API reference and no machine-readable contract: its service gateway answers
+  every anonymous request with HTTP 401. NEXT was acquired by Chicago-based digital freight broker
+  CDL 1000 in February 2024; the nexttrucking.com brand, marketplace and applications remain live.
+  Backers before the acquisition included Sequoia Capital, Brookfield Growth, GLP Capital and Mucker
+  Capital.
+image: https://nexttrucking.com/wp-content/uploads/2023/04/NEXT.svg
 url: https://raw.githubusercontent.com/api-evangelist/next-trucking/refs/heads/main/apis.yml
 x-type: company
 x-source: harvest:secondary-market
-x-tier: stub
-x-tier-reason: harvest
+x-tier: profiled
+x-tier-reason: enrichment-pass-2026-08-26
 specificationVersion: '0.20'
 created: '2026-08-26'
 modified: '2026-08-26'
 tags:
 - Company
-apis: []
+- Logistics
+- Freight
+- Trucking
+- Drayage
+- Supply Chain
+- Transportation
+- Marketplace
+- Transportation Management
+- Shipping
+apis:
+- name: NEXT ATLAS Platform API
+  description: >-
+    The service gateway behind NEXT's ATLAS transportation management system and its shipper, carrier
+    and managed-carrier portals. Twenty-nine service paths were enumerated from the ATLAS web
+    application bundle — including shippers, carrier, delivery-order, trips, appointments, pricing-v2,
+    equipment, yards, places, location, document, document-obligation, freight-doc, accessorial-event,
+    accounting, ap, exception-management, marketplace-job-distribution and user-management. The
+    gateway is real and reachable, but it is not a published product: every service path returns HTTP
+    401 to an anonymous request, the Swagger UI asset bundle is served while the OpenAPI documents it
+    would render are unrouted (HTTP 404 on /v3/api-docs for every service), and NEXT publishes no
+    developer portal, reference or contract. Recorded here as a gated surface, not as an available API.
+  humanURL: https://nexttrucking.com/our-technology/
+  baseURL: https://svcs.us-west-2.prod.aws.nexttrucking.com
+  x-access: gated
+  x-access-note: >-
+    Discovered by probe, not from documentation. Host and service paths read from
+    https://atlas.nexttrucking.com/index.05305cf32fe3cdc18fa6.js; all paths confirmed 401 on
+    2026-08-26. No spec is published, so no contract pointer is wired.
+  tags:
+  - Freight
+  - Logistics
+  - Drayage
+  - Transportation Management
+  properties:
+  - type: Authentication
+    url: authentication/next-trucking-authentication.yml
+  - type: OAuthScopes
+    url: scopes/next-trucking-scopes.yml
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
@@ -20,4 +69,76 @@ maintainers:
   email: info@apis.io
 common:
 - type: Website
-  url: https://forgeglobal.com/next-trucking_stock/
+  url: https://nexttrucking.com/
+- type: About
+  url: https://nexttrucking.com/company/
+- type: Support
+  url: https://nexttrucking.com/contact-us/
+- type: Blog
+  url: https://nexttrucking.com/blog/
+- type: BlogRSS
+  url: https://nexttrucking.com/feed/
+- type: Press
+  url: https://nexttrucking.com/press/
+- type: SignUp
+  url: https://nexttrucking.com/sign-up-hub/
+- type: Login
+  url: https://app.nexttrucking.com/signin
+- type: TermsOfService
+  url: https://nexttrucking.com/terms-of-service/
+- type: PrivacyPolicy
+  url: https://nexttrucking.com/privacy-policy/
+- type: GitHubOrganization
+  url: https://github.com/NextDeveloperTeam
+- type: LinkedIn
+  url: https://www.linkedin.com/company/next-trucking
+- type: Authentication
+  url: authentication/next-trucking-authentication.yml
+- type: OAuthScopes
+  url: scopes/next-trucking-scopes.yml
+- type: WellKnown
+  url: well-known/next-trucking-well-known.yml
+- type: Conformance
+  url: conformance/next-trucking-conformance.yml
+- type: Lifecycle
+  url: lifecycle/next-trucking-lifecycle.yml
+- type: DomainSecurity
+  url: security/next-trucking-domain-security.yml
+- type: Plans
+  url: plans/next-trucking-plans-pricing.yml
+- type: RateLimits
+  url: rate-limits/next-trucking-rate-limits.yml
+- type: LLMsTxt
+  url: llms/next-trucking-llms.txt
+x-acquisition:
+  acquired_by: CDL 1000 (Chicago Digital Logistics)
+  announced: '2024-02-12'
+  source: https://www.freightwaves.com/news/cdl-1000-acquires-next-trucking
+  note: >-
+    Reported by The Wall Street Journal and FreightWaves; terms undisclosed, financed by Brookfield
+    Growth and Mucker Capital. The acquirer's own domain (cdl1000.com) did not resolve when probed on
+    2026-08-26, so no acquirer pointer is wired. The NEXT brand, marketplace and applications remain
+    live and independently reachable.
+x-enrichment:
+  date: '2026-08-26'
+  status: minimal
+  artifacts_added: 11
+  pass: local-v1
+x-coverage:
+  state: gated
+  reason: customer-only-docs
+  detail: >-
+    NEXT's ATLAS service gateway is live and serves the springdoc Swagger UI shell for 22 services,
+    but the OpenAPI documents that UI is configured to load (/<service>/v3/api-docs) are unrouted at
+    the gateway and every service path returns nginx "401 Authorization Required" to an anonymous
+    caller, so the contract is generated and then withheld behind a shipper/carrier agreement.
+  evidence:
+    - url: https://svcs.us-west-2.prod.aws.nexttrucking.com/shippers/swagger-ui/index.html
+      status: 200
+    - url: https://svcs.us-west-2.prod.aws.nexttrucking.com/shippers/v3/api-docs
+      status: 404
+    - url: https://svcs.us-west-2.prod.aws.nexttrucking.com/shippers
+      status: 401
+    - url: https://nexttrucking.com/llms.txt
+      status: 404
+  checked: '2026-08-26'

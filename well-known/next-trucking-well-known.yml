@@ -1,0 +1,126 @@
+generated: '2026-08-26'
+method: probed
+source: >-
+  Live unauthenticated probes of /.well-known/ on every NEXT Trucking host discovered in this
+  round: the marketing site, the shipper/carrier web apps, the ATLAS SPA, the internal service
+  gateway found in the ATLAS bundle, and the company's Auth0 tenant.
+summary: >-
+  Two real documents were retrieved, and both are served by NEXT Trucking's own Auth0 tenant
+  (prod-nexttrucking.us.auth0.com): the OpenID Connect discovery document and the RFC 8414
+  authorization-server metadata document (Auth0 serves byte-identical bodies at both paths).
+  Nothing is served on any nexttrucking.com host: no security.txt, no api-catalog, no OIDC
+  discovery, no ai-plugin.json and no A2A agent card anywhere.
+pointer_basis: >-
+  WellKnown pointer emitted on the strength of the two 200s on prod-nexttrucking.us.auth0.com.
+  That host is a tenant NEXT Trucking provisions and the ATLAS application authenticates against
+  it (the tenant URL is hard-coded in https://atlas.nexttrucking.com/index.05305cf32fe3cdc18fa6.js),
+  so the documents describe this company's identity surface — but the host is an auth0.com
+  subdomain, NOT a nexttrucking.com host, and that distinction is recorded here deliberately.
+  SecurityTxt pointer NOT emitted: RFC 9116 is unimplemented on every host probed.
+false_positive_watch: >-
+  app.nexttrucking.com and atlas.nexttrucking.com are S3/CloudFront single-page apps that answer
+  HTTP 200 with the application HTML shell for EVERY extensionless /.well-known/* path, and HTTP
+  403 (S3 AccessDenied XML) for any path with a file extension. Every one of those 200s is
+  recorded below as a MISS, not a hit. A future round that treats one of them as a served
+  document is wrong.
+hosts:
+  - host: https://nexttrucking.com
+    documents:
+      - path: /.well-known/security.txt
+        status: 404
+      - path: /.well-known/openid-configuration
+        status: 404
+      - path: /.well-known/oauth-authorization-server
+        status: 404
+      - path: /.well-known/api-catalog
+        status: 404
+      - path: /.well-known/ai-plugin.json
+        status: 404
+      - path: /.well-known/agent-card.json
+        status: 404
+      - path: /.well-known/agent.json
+        status: 404
+      - path: /llms.txt
+        status: 404
+    note: WordPress site; all misses return the themed 404 page.
+  - host: https://app.nexttrucking.com
+    documents:
+      - path: /.well-known/security.txt
+        status: 403
+        body: S3 AccessDenied XML
+      - path: /.well-known/openid-configuration
+        status: 200
+        result: miss
+        body: SPA HTML shell, not a document
+      - path: /.well-known/oauth-authorization-server
+        status: 200
+        result: miss
+        body: SPA HTML shell, not a document
+      - path: /.well-known/api-catalog
+        status: 200
+        result: miss
+        body: SPA HTML shell, not a document
+      - path: /.well-known/agent-card.json
+        status: 403
+        body: S3 AccessDenied XML
+      - path: /.well-known/agent.json
+        status: 403
+        body: S3 AccessDenied XML
+      - path: /.well-known/ai-plugin.json
+        status: 403
+        body: S3 AccessDenied XML
+  - host: https://atlas.nexttrucking.com
+    documents:
+      - path: /.well-known/security.txt
+        status: 403
+        body: S3 AccessDenied XML
+      - path: /.well-known/openid-configuration
+        status: 200
+        result: miss
+        body: SPA HTML shell, not a document
+      - path: /.well-known/oauth-authorization-server
+        status: 200
+        result: miss
+        body: SPA HTML shell, not a document
+      - path: /.well-known/api-catalog
+        status: 200
+        result: miss
+        body: SPA HTML shell, not a document
+      - path: /.well-known/agent-card.json
+        status: 403
+        body: S3 AccessDenied XML
+      - path: /.well-known/agent.json
+        status: 403
+        body: S3 AccessDenied XML
+  - host: https://svcs.us-west-2.prod.aws.nexttrucking.com
+    documents:
+      - path: /.well-known/openid-configuration
+        status: 401
+        body: nginx "401 Authorization Required"
+      - path: /.well-known/agent-card.json
+        status: 401
+        body: nginx "401 Authorization Required"
+    note: >-
+      Internal API gateway fronting the ATLAS microservices. Every path is either 401 (gateway
+      auth) or 404 (unrouted); nothing anonymous is served.
+  - host: https://prod-nexttrucking.us.auth0.com
+    documents:
+      - path: /.well-known/openid-configuration
+        status: 200
+        file: next-trucking-openid-configuration.json
+      - path: /.well-known/oauth-authorization-server
+        status: 200
+        file: next-trucking-oauth-authorization-server.json
+    note: >-
+      NEXT Trucking's Auth0 tenant. Auth0 returns the same metadata body at both paths, so the
+      two saved files are byte-identical; both are kept because they are distinct specifications
+      (OIDC Discovery and RFC 8414).
+  - host: https://nexttrucking.okta.com
+    documents:
+      - path: /.well-known/openid-configuration
+        status: 404
+      - path: /.well-known/oauth-authorization-server
+        status: 404
+    note: >-
+      An Okta org is referenced in the ATLAS bundle (employee SSO). Org-level discovery is not
+      exposed; Okta serves discovery per authorization server, and no server id is public.

@@ -1,0 +1,26 @@
+generated: '2026-08-26'
+method: searched
+source: >-
+  https://nexttrucking.com/wp-sitemap-posts-page-1.xml (full site map, HTTP 200); live probes of
+  https://svcs.us-west-2.prod.aws.nexttrucking.com on 2026-08-26.
+limit_count: 0
+summary: >-
+  No rate limits are documented, because no developer documentation exists. Runtime limit signalling
+  could not be observed either: every service path on the ATLAS gateway returns nginx "401
+  Authorization Required" to an anonymous request, and that response carries no RateLimit-*,
+  X-RateLimit-* or Retry-After header.
+documented: false
+observed:
+  host: https://svcs.us-west-2.prod.aws.nexttrucking.com
+  method: anonymous GET
+  response: 401 (nginx) on every service path; 404 on unrouted paths
+  headers_seen: []
+  note: >-
+    Absence of rate-limit headers on a gateway-level 401 says nothing about what the API enforces
+    behind authentication — it only records that no runtime signal is available to an unauthenticated
+    caller. Recorded as unknown rather than as "no limits".
+exhaustion_status_code: null
+headers:
+  standard: null
+  vendor: null
+limits: []

@@ -1,0 +1,92 @@
+generated: '2026-08-26'
+method: probed
+source: >-
+  Live probes of nexttrucking.com and its subdomains on 2026-08-26; https://nexttrucking.com/wp-sitemap.xml
+  (23 pages, none developer-facing); https://www.freightwaves.com/news/cdl-1000-acquires-next-trucking.
+summary: >-
+  NEXT Trucking publishes no versioning policy, no deprecation policy, no changelog, no SLA and no
+  status page. The company remains operational under CDL 1000 ownership and its applications are live,
+  but several surfaces its own site links to have decayed — recorded below because a broken link the
+  provider still advertises is a finding, not a gap in this probe.
+versioning:
+  scheme: null
+  mechanism: null
+  docs: null
+  note: >-
+    No versioning policy is published. The only version signal observed is path-level: the ATLAS
+    gateway exposes a `pricing-v2` service and a `scrapingv2` service, implying per-service major
+    versions in the path, but this is inferred from service names in the application bundle and is
+    not documented.
+deprecation:
+  policy_url: null
+  sunset_header: unknown
+  note: >-
+    No deprecation policy. RFC 8594 Sunset/Deprecation header behaviour could not be observed: every
+    gateway path returns 401 to an anonymous request, so no application response headers were seen.
+  pointer_emitted: false
+sla:
+  url: null
+  public_uptime_target: null
+  note: >-
+    No SLA is published. Service commitments, if any, sit inside the brokerage agreement at
+    https://nexttrucking.com/brokerage-terms/ (HTTP 200), which is a commercial contract rather than
+    an availability commitment.
+status_page:
+  url: null
+  pointer_emitted: false
+  probes:
+    - url: https://status.nexttrucking.com
+      status: 000
+      result: NXDOMAIN
+    - url: https://nexttrucking.statuspage.io
+      status: 000
+      result: no response
+    - url: https://nexttrucking.instatus.com
+      status: 200
+      result: >-
+        MISS — this is Instatus's own generic marketing page ("Instatus – Get ready for downtime"),
+        not a NEXT Trucking status page. Recorded so a later round does not mistake the 200 for a hit.
+changelog:
+  url: null
+  note: No dated changelog, release notes or product-update feed is published.
+decay:
+  summary: >-
+    Three surfaces NEXT Trucking still links or has historically linked are broken as of 2026-08-26.
+  findings:
+    - surface: Help center
+      url: https://help.nexttrucking.com/hc/en-us
+      status: 000
+      finding: >-
+        TLS handshake failure (SSLV3_ALERT_HANDSHAKE_FAILURE) for the SNI help.nexttrucking.com —
+        reproduced with LibreSSL and with OpenSSL forcing both TLS 1.2 and TLS 1.3, and it also fails
+        with certificate verification disabled, so no cert is being served for that name at all. DNS
+        still points at nexttrucking.zendesk.com. The vanity host mapping is broken, not the help
+        center: https://nexttrucking.zendesk.com/hc/en-us answers HTTP 403 with a Cloudflare
+        interstitial ("Just a moment..."), which is a bot challenge and therefore live.
+      linked_from: the site-wide footer / support navigation on https://nexttrucking.com/
+      impact: The support link published on every page of the marketing site cannot be opened over HTTPS.
+    - surface: Careers board
+      url: https://boards.greenhouse.io/nexttrucking
+      status: 404
+      finding: The Greenhouse job board linked from the marketing site no longer exists.
+    - surface: Driver mobile app (Android)
+      url: https://play.google.com/store/apps/details?id=com.nexttrucking.trucker
+      status: 404
+      finding: >-
+        The NEXT Trucking driver app listing returns 404 on Google Play, while the marketing site
+        continues to link to it.
+    - surface: GitHub organization
+      url: https://github.com/NextDeveloperTeam
+      status: 200
+      finding: >-
+        The org exists and is theirs (display name "Next Trucking Developer Team", website
+        www.nexttrucking.com, created 2015-11-11, last updated 2026-02-12) but exposes ZERO public
+        repositories via the API. Third-party listings that cite "13 repositories" describe a state
+        that is no longer public.
+ownership:
+  acquired_by: CDL 1000 (Chicago Digital Logistics)
+  announced: '2024-02-12'
+  source: https://www.freightwaves.com/news/cdl-1000-acquires-next-trucking
+  operating_status: >-
+    Live. nexttrucking.com, app.nexttrucking.com, atlas.nexttrucking.com and quotes.nexttrucking.com
+    all answer HTTP 200; the marketing site's own newest published assets date to 2024.

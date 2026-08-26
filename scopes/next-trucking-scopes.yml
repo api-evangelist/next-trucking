@@ -1,0 +1,72 @@
+generated: '2026-08-26'
+method: probed
+source: >-
+  scopes_supported in https://prod-nexttrucking.us.auth0.com/.well-known/openid-configuration
+  (HTTP 200, saved verbatim to well-known/next-trucking-openid-configuration.json).
+docs: null
+summary: >-
+  The only scope set NEXT Trucking exposes anonymously is the stock OpenID Connect profile advertised
+  by its Auth0 tenant. These are identity scopes, NOT application permissions: nothing here grants
+  access to loads, quotes, trips, documents or any ATLAS resource. No API permission reference is
+  published, and the resource scopes the ATLAS gateway actually enforces are not discoverable without
+  credentials.
+provider: auth0
+issuer: https://prod-nexttrucking.us.auth0.com/
+flows:
+  authorization_code:
+    authorizationUrl: https://prod-nexttrucking.us.auth0.com/authorize
+    tokenUrl: https://prod-nexttrucking.us.auth0.com/oauth/token
+    pkce: S256
+  client_credentials:
+    tokenUrl: https://prod-nexttrucking.us.auth0.com/oauth/token
+    note: Advertised, but no audience or third-party client registration is published.
+scope_count: 14
+scopes:
+  - name: openid
+    description: Request an ID token (OpenID Connect).
+    kind: identity
+  - name: profile
+    description: Basic profile claims for the authenticated user.
+    kind: identity
+  - name: offline_access
+    description: Issue a refresh token.
+    kind: identity
+  - name: name
+    description: The user's full name claim.
+    kind: identity
+  - name: given_name
+    description: The user's given name claim.
+    kind: identity
+  - name: family_name
+    description: The user's family name claim.
+    kind: identity
+  - name: nickname
+    description: The user's nickname claim.
+    kind: identity
+  - name: email
+    description: The user's email address claim.
+    kind: identity
+  - name: email_verified
+    description: Whether the user's email address has been verified.
+    kind: identity
+  - name: picture
+    description: The user's profile picture claim.
+    kind: identity
+  - name: created_at
+    description: Account creation timestamp claim.
+    kind: identity
+  - name: identities
+    description: Linked identity providers for the account.
+    kind: identity
+  - name: phone
+    description: The user's phone number claim.
+    kind: identity
+  - name: address
+    description: The user's address claim.
+    kind: identity
+resource_scopes:
+  published: false
+  note: >-
+    No NEXT-Trucking-specific API scopes (loads, containers, appointments, documents, payables) are
+    published anywhere. The ATLAS gateway returns 401 to every anonymous request, so its authorization
+    model cannot be introspected without credentials.

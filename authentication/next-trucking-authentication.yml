@@ -1,0 +1,108 @@
+generated: '2026-08-26'
+method: probed
+source: >-
+  https://prod-nexttrucking.us.auth0.com/.well-known/openid-configuration (HTTP 200, saved to
+  well-known/next-trucking-openid-configuration.json); the ATLAS application bundle at
+  https://atlas.nexttrucking.com/index.05305cf32fe3cdc18fa6.js (tenant + gateway hosts); live
+  probes of https://svcs.us-west-2.prod.aws.nexttrucking.com.
+summary: >-
+  NEXT Trucking publishes no developer authentication documentation. What is verifiable without
+  credentials is the identity layer its own applications use: an Auth0 tenant implementing OpenID
+  Connect / OAuth 2.0, and an API gateway that rejects every anonymous request with HTTP 401.
+  Everything below was read from machine-readable discovery documents or observed on the wire —
+  none of it is a published developer contract, and no key-issuance process is documented publicly.
+docs: null
+docs_note: >-
+  No public authentication reference exists. There is no developer portal, no API reference and no
+  "get an API key" page anywhere on nexttrucking.com; the sitemap contains 23 pages and none of
+  them is developer-facing.
+schemes:
+  - id: auth0_oidc
+    type: openIdConnect
+    name: NEXT Trucking Auth0 tenant (OpenID Connect)
+    openIdConnectUrl: https://prod-nexttrucking.us.auth0.com/.well-known/openid-configuration
+    issuer: https://prod-nexttrucking.us.auth0.com/
+    endpoints:
+      authorization: https://prod-nexttrucking.us.auth0.com/authorize
+      token: https://prod-nexttrucking.us.auth0.com/oauth/token
+      userinfo: https://prod-nexttrucking.us.auth0.com/userinfo
+      jwks: https://prod-nexttrucking.us.auth0.com/.well-known/jwks.json
+      device_authorization: https://prod-nexttrucking.us.auth0.com/oauth/device/code
+      revocation: https://prod-nexttrucking.us.auth0.com/oauth/revoke
+      registration: https://prod-nexttrucking.us.auth0.com/oidc/register
+      mfa_challenge: https://prod-nexttrucking.us.auth0.com/mfa/challenge
+    grant_types:
+      - authorization_code
+      - client_credentials
+      - refresh_token
+      - implicit
+      - password
+      - urn:ietf:params:oauth:grant-type:device_code
+      - urn:ietf:params:oauth:grant-type:token-exchange
+      - urn:ietf:params:oauth:grant-type:jwt-bearer
+    response_types:
+      - code
+      - token
+      - id_token
+      - code token
+      - code id_token
+      - token id_token
+      - code token id_token
+    pkce:
+      supported: true
+      methods:
+        - S256
+        - plain
+    token_endpoint_auth_methods:
+      - client_secret_basic
+      - client_secret_post
+      - private_key_jwt
+      - none
+    id_token_signing_algs:
+      - HS256
+      - RS256
+      - PS256
+    machine_to_machine:
+      supported: true
+      evidence: >-
+        client_credentials is advertised in grant_types_supported, which is the grant a server-to-server
+        integration would use — but no client registration path, audience or scope set is published for
+        third parties, so this cannot be exercised without NEXT Trucking issuing credentials.
+    note: >-
+      This is the tenant the ATLAS operations console and the shipper/carrier web apps authenticate
+      against. It is a real, anonymously readable OIDC deployment, not a documented public API auth
+      model. The scopes it advertises are the stock OIDC profile scopes (see scopes/), not
+      NEXT-Trucking-specific API permissions.
+  - id: gateway_bearer
+    type: http
+    scheme: bearer
+    name: ATLAS service gateway (bearer token, undocumented)
+    in: header
+    header: Authorization
+    observed_on: https://svcs.us-west-2.prod.aws.nexttrucking.com
+    evidence: >-
+      Every service path on the gateway (/shippers, /carrier, /trips, /delivery-order, /pricing-v2,
+      /yards and 20 more discovered in the ATLAS bundle) returns nginx "401 Authorization Required"
+      to an anonymous GET. Bearer is inferred from the Auth0 OIDC tenant the front ends obtain tokens
+      from; the exact header form is NOT published and was not observed, so treat it as unconfirmed.
+    confidence: medium
+    documented: false
+  - id: okta_sso
+    type: openIdConnect
+    name: Okta org (workforce SSO)
+    host: https://nexttrucking.okta.com
+    discovery: null
+    evidence: >-
+      Referenced in the ATLAS bundle. Org-level /.well-known/openid-configuration returns 404 (Okta
+      exposes discovery per authorization server, and no server id is public). Appears to be employee
+      SSO rather than a customer or developer identity surface.
+    documented: false
+mtls: false
+api_keys:
+  published: false
+  note: No API key issuance, prefix convention or key management surface is documented publicly.
+gaps:
+  - No public authentication documentation of any kind.
+  - No documented way for a third party to obtain credentials; access appears to follow a signed
+    shipper/carrier agreement rather than self-service registration.
+  - The gateway's token format, audience and required scopes are not published.

@@ -1,0 +1,31 @@
+generated: '2026-08-26'
+method: searched
+source: >-
+  https://nexttrucking.com/wp-sitemap-posts-page-1.xml (full 23-page site map, HTTP 200);
+  https://nexttrucking.com/shippers/ (HTTP 200); https://nexttrucking.com/services/ (HTTP 200);
+  https://quotes.nexttrucking.com/home (HTTP 200); https://nexttrucking.com/contact-us/ (HTTP 200).
+plan_count: 0
+summary: >-
+  NEXT Trucking publishes no plans, tiers or price list — for the freight service or for any API or
+  EDI access. Pricing is transactional and quote-based: rates are produced per shipment through an
+  instant-quote application, and everything else routes to a sales conversation. There is no pricing
+  page anywhere in the site map.
+pricing_model: quote-based / transactional freight rates
+quote_surface:
+  url: https://quotes.nexttrucking.com/home
+  status: 200
+  note: >-
+    A Next.js instant-quote application for shippers. It produces a per-shipment rate after an
+    origin/destination and container/equipment entry; it does not publish a rate card, a tariff or
+    any tier structure, and it is not an API.
+api_pricing:
+  published: false
+  note: >-
+    No API or EDI pricing is published, which follows from there being no published API programme at
+    all. Connectivity is described on https://nexttrucking.com/our-technology/ as part of the platform
+    a contracted shipper or carrier uses, not as a separately priced product.
+sales_contact:
+  url: https://nexttrucking.com/contact-us/
+  email: info@nexttrucking.com
+  phone: (855) 688-6398
+plans: []
