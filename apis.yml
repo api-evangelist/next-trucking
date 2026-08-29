@@ -13,6 +13,17 @@ description: >-
   CDL 1000 in February 2024; the nexttrucking.com brand, marketplace and applications remain live.
   Backers before the acquisition included Sequoia Capital, Brookfield Growth, GLP Capital and Mucker
   Capital.
+deliveryModel:
+  model: saas
+  open_source: false
+  commercial: true
+  callable_host: false
+  label: Hosted service · you call their endpoint
+  confidence: medium
+  source:
+  - pricing
+  generated: '2026-08-28'
+  method: derived
 image: https://nexttrucking.com/wp-content/uploads/2023/04/NEXT.svg
 url: https://raw.githubusercontent.com/api-evangelist/next-trucking/refs/heads/main/apis.yml
 x-type: company
